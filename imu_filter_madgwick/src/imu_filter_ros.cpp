@@ -292,6 +292,8 @@ void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
   boost::shared_ptr<ImuMsg> imu_msg =
     boost::make_shared<ImuMsg>(*imu_msg_raw);
 
+  imu_msg->header.frame_id = fixed_frame_;
+
   imu_msg->orientation.w = q0;
   imu_msg->orientation.x = q1;
   imu_msg->orientation.y = q2;
