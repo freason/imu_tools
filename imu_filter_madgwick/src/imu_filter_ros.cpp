@@ -279,8 +279,9 @@ void ImuFilterRos::publishTransform(const ImuMsg::ConstPtr& imu_msg_raw)
     transform.transform.rotation.y = q2;
     transform.transform.rotation.z = q3;
   }
+#ifdef PUBLISH_TRANSFORM
   tf_broadcaster_.sendTransform(transform);
-
+#endif
 }
 
 void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
