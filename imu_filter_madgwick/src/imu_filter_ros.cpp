@@ -279,9 +279,8 @@ void ImuFilterRos::publishTransform(const ImuMsg::ConstPtr& imu_msg_raw)
     transform.transform.rotation.y = q2;
     transform.transform.rotation.z = q3;
   }
-#ifdef PUBLISH_TRANSFORM
+
   tf_broadcaster_.sendTransform(transform);
-#endif
 }
 
 void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
@@ -293,7 +292,9 @@ void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
   boost::shared_ptr<ImuMsg> imu_msg =
     boost::make_shared<ImuMsg>(*imu_msg_raw);
 
-  imu_msg->header.frame_id = fixed_frame_;
+  if (!publish_tf_) {
+    imu_msg->header.frame_id = fixed_frame_;
+  }
 
   imu_msg->orientation.w = q0;
   imu_msg->orientation.x = q1;
@@ -341,10 +342,18 @@ void ImuFilterRos::computeRPY(
 {
   // initialize roll/pitch orientation from acc. vector.
   double sign = copysignf(1.0, az);
+#ifdef ORI_MADGWICK
   roll = atan2(ay, sign * sqrt(ax*ax + az*az));
   pitch = -atan2(ax, sqrt(ay*ay + az*az));
   double cos_roll = cos(roll);
   double sin_roll = sin(roll);
+#else
+  roll = atan2(ay, az);
+  double cos_roll = cos(roll);
+  double sin_roll = sin(roll);
+
+  pitch = atan2(-ax, ay * sin_roll + az * sin_roll);
+#endif
   double cos_pitch = cos(pitch);
   double sin_pitch = sin(pitch);
 
