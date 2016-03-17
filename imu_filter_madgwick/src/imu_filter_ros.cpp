@@ -292,9 +292,7 @@ void ImuFilterRos::publishFilteredMsg(const ImuMsg::ConstPtr& imu_msg_raw)
   boost::shared_ptr<ImuMsg> imu_msg =
     boost::make_shared<ImuMsg>(*imu_msg_raw);
 
-  if (!publish_tf_) {
-    imu_msg->header.frame_id = fixed_frame_;
-  }
+  imu_msg->header.frame_id = imu_frame_;
 
   imu_msg->orientation.w = q0;
   imu_msg->orientation.x = q1;
