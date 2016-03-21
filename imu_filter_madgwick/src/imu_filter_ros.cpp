@@ -213,7 +213,7 @@ void ImuFilterRos::imuMagCallback(
     }
 
     computeRPY(
-      lin_acc.x, lin_acc.y, lin_acc.z,
+      -lin_acc.x, -lin_acc.y, -lin_acc.z,
       mx, my, mz,
       roll, pitch, yaw);
 
