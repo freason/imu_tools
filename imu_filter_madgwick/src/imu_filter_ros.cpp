@@ -237,7 +237,7 @@ void ImuFilterRos::imuMagCallback(
 
   filter_.madgwickAHRSupdate(
     ang_vel.x, ang_vel.y, ang_vel.z,
-    lin_acc.x, lin_acc.y, lin_acc.z,
+    -lin_acc.x, -lin_acc.y, -lin_acc.z,
     mx, my, mz,
     dt);
 
@@ -248,7 +248,7 @@ void ImuFilterRos::imuMagCallback(
   if(publish_debug_topics_ && std::isfinite(mx) && std::isfinite(my) && std::isfinite(mz))
   {
     computeRPY(
-      lin_acc.x, lin_acc.y, lin_acc.z,
+      -lin_acc.x, -lin_acc.y, -lin_acc.z,
       mx, my, mz,
       roll, pitch, yaw);
 
